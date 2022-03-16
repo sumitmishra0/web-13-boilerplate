@@ -1,14 +1,25 @@
-import React, { useEffect } from "react";
+ import React, { useEffect,useState } from "react";
+import axios from "axios"
+import './MovieDashboard.css'
+
+
 
 const genres = ["Comedy", "Thriller", "Drama", "Documentary", "Children"];
 
 export const MoviesDashboard = () => {
-  
-    // to get all movies list on component mounts
-  useEffect(() => {
-    //   dispatch an action to the store 
+  const [data,setdata] = useState([]);
+    const getData = ()=>{
+      axios.get( "https://movie-fake-server.herokuapp.com/data").then(response=>{
+        setdata(response.data);
+    });
+    }
 
-  }, [dispatch]);
+  
+  useEffect(() => {
+   getData();
+
+  }, []);
+  // console.log(data);
 
 
 //    filter by genre 
@@ -22,7 +33,17 @@ const handleFilter = (e)=>{
         {/* map through the filter  */}
       </select>
       <div className = "movies-list">
-       {/* map throught th movie list and display the results */}
+         {data.map((e)=>(
+           <div>
+             {/* <h1>{e.id}</h1> */}
+             <h1>{e.movie_name}</h1>
+             <h2>{e.genre}</h2>
+             <p>Rating-{e.rating}</p>
+             <p>Release date -{e.release_date}</p>
+             <img src={e.image_url}/>
+
+           </div>
+         ))}
       </div>
     </>
   );
